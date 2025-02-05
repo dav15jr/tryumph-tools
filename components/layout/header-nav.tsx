@@ -57,10 +57,10 @@ export function HeaderNav() {
       {/* Logo section */}
       <div className="container mx-auto px-4 py-8 text-center">
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/wol%20screen-t6ZYwHZIPyKHPZGGGkdrp482E4JQqS.png"
+          src="/Tryumph Coaching-header-01-01-01.png"
           alt="Tryumph Coaching Logo"
           width={300}
-          height={90}
+          height={100}
           className="mx-auto w-3/4 max-w-xs"
           priority
         />

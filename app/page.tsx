@@ -16,14 +16,14 @@ export default function HomePage() {
       title: "Wheel Of Life",
       description:
         "Improve your life today using our unique Wheel Of Life tool. Find out which areas you need to improve and set your SMART goals on how to achieve it.",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/WheeloflifeYT.jpg",
       link: "/wheel-of-life",
     },
     {
       title: "Productivity Planner",
       description:
         "Increase your productivity using our custom Productivity Planner. Break down your week and see where you can improve to achieve your goals.",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/Tryumph table-01-01.png",
       link: "/planner",
     },
   ]
