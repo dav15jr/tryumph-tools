@@ -85,9 +85,10 @@ export function WheelOfLifeChart({
         },
         pointLabels: {
           display: true,
+          centerPointLabels: true,
           font: {
-            size: 12,
-          },
+            size: 12
+          }
         },
         angleLines: {
           display: true,
@@ -99,6 +100,7 @@ export function WheelOfLifeChart({
     },
     plugins: {
       legend: {
+        position: 'top',
         display: false, // Remove chart keys
       },
       tooltip: {
@@ -133,7 +135,7 @@ export function WheelOfLifeChart({
             </p>
           )}
         </div>
-        <div className="aspect-square w-full max-w-xl mx-auto">
+        <div className="aspect-square w-full max-w-xl min-w-[240px] mx-auto">
           <PolarArea data={chartData} options={options} />
         </div>
       </CardContent>

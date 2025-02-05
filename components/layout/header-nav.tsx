@@ -40,24 +40,18 @@ export function HeaderNav() {
   return (
     <>
       {/* Header with social icons */}
-      <div className="container mx-auto p-4 flex justify-between items-center">
-        <div className="w-1/3">
-          <Link href="/" className="text-2xl font-bold text-purple-600 md:hidden">
-            Tryumph
-          </Link>
-        </div>
-        <div className="w-1/3 flex justify-center">
+      <div className="container mx-auto p-4 flex justify-center items-center">
+        <div className="w-full flex justify-center">
           {/* Social media icons */}
           <div className="flex gap-4 items-center justify-center flex-grow">
-            <Link href="https://instagram.com" className="text-gray-600 hover:text-purple-600 transition-colors">
+            <Link href="https://instagram.com" target="_blank" className="text-gray-600 hover:text-purple-600 transition-colors">
               <Instagram className="w-5 h-5" />
             </Link>
-            <Link href="https://youtube.com" className="text-gray-600 hover:text-purple-600 transition-colors">
+            <Link href="https://youtube.com" target="_blank" className="text-gray-600 hover:text-purple-600 transition-colors">
               <Youtube className="w-5 h-5" />
             </Link>
           </div>
         </div>
-        <div className="w-1/3"></div>
       </div>
 
       {/* Logo section */}
@@ -70,26 +64,27 @@ export function HeaderNav() {
           className="mx-auto w-3/4 max-w-xs"
           priority
         />
-        <p className="text-yellow-500 text-lg mt-2 font-semibold">TO TRIUMPH YOU MUST FIRST TRY</p>
       </div>
 
       {/* Navigation */}
       <nav className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 relative">
-          <div className="flex justify-between items-center py-4 md:py-0">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center py-4">
             <button
               onClick={toggleMenu}
-              className="md:hidden text-gray-600 hover:text-purple-600 transition-colors focus:outline-none"
+              className="lg:hidden text-gray-600 hover:text-purple-600 transition-colors focus:outline-none"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
             <ul
-              className={`md:flex md:items-center md:justify-center w-full gap-4 py-4 absolute left-0 md:relative ${
-                isMenuOpen ? "fixed inset-0 bg-white z-50 h-full flex flex-col justify-center" : "hidden"
-              } md:flex bg-white md:bg-transparent z-20`}
+              className={`lg:flex lg:items-center justify-center w-full gap-4 py-4 ${
+                isMenuOpen
+                  ? "fixed inset-0 bg-white z-50 flex flex-col items-center justify-center space-y-4"
+                  : "hidden"
+              } lg:relative lg:bg-transparent lg:space-y-0`}
             >
               {isMenuOpen && (
-                <li className="md:hidden absolute top-4 right-4 z-50">
+                <li className="lg:hidden absolute top-4 right-4">
                   <button
                     onClick={toggleMenu}
                     className="text-gray-600 hover:text-purple-600 transition-colors focus:outline-none"
@@ -102,7 +97,8 @@ export function HeaderNav() {
                 <li key={index} className="text-center">
                   <Link
                     href={`/${item.toLowerCase().replace(" ", "-")}`}
-                    className={`block text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md`}
+                    className="block text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md"
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     {item}
                   </Link>
@@ -116,7 +112,8 @@ export function HeaderNav() {
               >
                 <Link
                   href="/"
-                  className="flex items-center text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md"
+                  className="flex items-center justify-center text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   TOOLS <ChevronDown className="ml-1 h-4 w-4" />
                 </Link>
@@ -127,6 +124,7 @@ export function HeaderNav() {
                         href="/wheel-of-life"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                         role="menuitem"
+                        onClick={() => setIsMenuOpen(false)}
                       >
                         Wheel of Life
                       </Link>
@@ -134,6 +132,7 @@ export function HeaderNav() {
                         href="/planner"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                         role="menuitem"
+                        onClick={() => setIsMenuOpen(false)}
                       >
                         Productivity Planner
                       </Link>
@@ -142,19 +141,19 @@ export function HeaderNav() {
                 )}
               </li>
             </ul>
+            {user && (
+              <div className="lg:ml-4">
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  size="sm"
+                  className="hover:bg-purple-600 hover:text-white transition-colors duration-200"
+                >
+                  Logout
+                </Button>
+              </div>
+            )}
           </div>
-          {user && (
-            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-              <Button
-                variant="outline"
-                onClick={handleLogout}
-                size="sm"
-                className="hover:bg-purple-600 hover:text-white transition-colors duration-200"
-              >
-                Logout
-              </Button>
-            </div>
-          )}
         </div>
       </nav>
     </>

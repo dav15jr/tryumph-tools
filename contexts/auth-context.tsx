@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log("User signed out successfully")
     } catch (error) {
       console.error("Error signing out:", error)
-      throw error // Re-throw the error so it can be caught in the component
+      throw error
     }
   }
 

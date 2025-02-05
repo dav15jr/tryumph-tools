@@ -59,6 +59,18 @@ const initialCategories: Category[] = [
     goal: "",
   },
   {
+    name: "Career",
+    score: "",
+    tooltip: { score: "Rate your job satisfaction and career progress", goal: "Set a career-related goal" },
+    goal: "",
+  },
+  {
+    name: "Self Improvement",
+    score: "",
+    tooltip: { score: "Rate your growth and learning in personal areas", goal: "Set a personal development goal" },
+    goal: "",
+  },
+  {
     name: "Relationships",
     score: "",
     tooltip: {
@@ -83,24 +95,12 @@ const initialCategories: Category[] = [
     goal: "",
   },
   {
-    name: "Career",
-    score: "",
-    tooltip: { score: "Rate your job satisfaction and career progress", goal: "Set a career-related goal" },
-    goal: "",
-  },
-  {
     name: "Leisure",
     score: "",
     tooltip: {
       score: "Rate your work-life balance and enjoyment of free time",
       goal: "Set a goal to improve your leisure time",
     },
-    goal: "",
-  },
-  {
-    name: "Self Improvement",
-    score: "",
-    tooltip: { score: "Rate your growth and learning in personal areas", goal: "Set a personal development goal" },
     goal: "",
   },
   {
@@ -517,12 +517,12 @@ export default function WheelOfLifePage() {
   const renderProgressChart = () => (
     <Card>
       <CardHeader>
-        <CardTitle>Your Progress</CardTitle>
+        <CardTitle>Your Score Progress</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-64">
+        <div className="h-64 m-0">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={progressData}>
+            <LineChart data={progressData} margin={{ left: -25 }}>
               <XAxis dataKey="date" />
               <YAxis domain={[0, 100]} />
               <RechartTooltip />
@@ -551,7 +551,7 @@ export default function WheelOfLifePage() {
           </div>
 
           <Tabs defaultValue="wheel" className="w-full">
-            <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 gap-2">
+            <TabsList className="grid w-full grid-cols-3 gap-2">
               <TabsTrigger value="wheel">Wheel of Life</TabsTrigger>
               <TabsTrigger value="progress">Progress</TabsTrigger>
               <TabsTrigger value="habits">Habits</TabsTrigger>
@@ -563,7 +563,7 @@ export default function WheelOfLifePage() {
                     <div className="flex flex-wrap justify-between items-center gap-4">
                       <div className="flex items-center space-x-4">
                         <Select onValueChange={(value) => setSelectedDate(value)} value={selectedDate || undefined}>
-                          <SelectTrigger className="w-[180px]">
+                          <SelectTrigger className="w-[150px]">
                             <SelectValue placeholder="Select date" />
                           </SelectTrigger>
                           <SelectContent>
@@ -585,7 +585,7 @@ export default function WheelOfLifePage() {
                       )}
                       <div className="flex items-center space-x-4">
                         <Select onValueChange={(value) => setCompareDate(value)} value={compareDate || undefined}>
-                          <SelectTrigger className="w-[180px]">
+                          <SelectTrigger className="w-[150px]">
                             <SelectValue placeholder="Compare with" />
                           </SelectTrigger>
                           <SelectContent>
@@ -618,7 +618,7 @@ export default function WheelOfLifePage() {
                           ) : (
                             <div className="flex flex-col lg:flex-row gap-8">
                               <div className="w-full lg:w-3/4 xl:w-full">
-                                {" "}
+                                
                                 {/* Update 1 */}
                                 <WheelOfLifeChart
                                   currentData={chartData.data}
