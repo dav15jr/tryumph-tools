@@ -112,12 +112,20 @@ export function WeeklySchedule({
   //   'ZERO VALUE (ZV)': []
   // } as Record<keyof typeof categoryColors, Activity[]>);
 
-  const groupedActivities = useMemo(() => {
-    return Object.entries(categoryColors).reduce((acc, [category]) => {
-      acc[category] = activities.filter(act => act.category === category);
+  const groupedActivities = (activities: Activity[]) => {
+    const grouped = Object.keys(categoryColors).reduce((acc, category) => {
+      acc[category as keyof typeof categoryColors] = [];
       return acc;
-    }, {} as Record<string, Activity[]>);
-  }, [activities]);
+    }, {} as Record<keyof typeof categoryColors, Activity[]>);
+  
+    activities.forEach(activity => {
+      if (activity?.category && grouped[activity.category]) {
+        grouped[activity.category].push(activity);
+      }
+    });
+  
+    return grouped;
+  };
 
 
   console.log('Grouped activities:', groupedActivities);

@@ -1,6 +1,6 @@
 "use client"
 import { categoryColors, type Activity, type GroupedActivities } from '../../lib/types';
-import { useState, useEffect} from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableRow, TableHeader } from "@/components/ui/table"
@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
 
 // interface Activity {
 //   name: string
@@ -60,6 +61,11 @@ export function ActivitiesTable({
     setActivities(activities)
   }, [activities, setActivities])
 
+  const maxRows = useMemo(() => {
+    const lengths = Object.values(activities).map(arr => arr.length);
+    return lengths.length > 0 ? Math.max(...lengths) : 0;
+  }, [activities]);
+  
   // const addActivity = () => {
   //   if (!newActivity.trim()) return
 
@@ -154,10 +160,11 @@ export function ActivitiesTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: Math.max(...Object.values(activities).map((cat) => cat.length)) }).map((_, index) => (
+            {/* {Array.from({ length: Math.max(...Object.values(activities).map((cat) => cat.length)) }).map((_, index) => ( */}
+            {Array.from({ length: maxRows }).map((_, index) => (
               <TableRow key={index}>
-                {(Object.keys(activities) as Array<keyof GroupedActivities>).map((category) => (
-                  <TableCell key={category}>
+        {(Object.keys(activities) as Array<keyof GroupedActivities>).map((category) => (
+                  <TableCell key={`${category}-${index}`}>
                     {activities[category][index] && (
                       <div className="flex items-center justify-between gap-2">
                         <span>{activities[category][index].name}</span>
@@ -199,5 +206,9 @@ export function ActivitiesTable({
       </div>
     </div>
   )
+}
+
+function useMemo(arg0: () => number, arg1: GroupedActivities[]) {
+  throw new Error('Function not implemented.');
 }
 
