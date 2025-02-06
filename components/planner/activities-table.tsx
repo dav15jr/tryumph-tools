@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, type React } from "react"
+import { useState, useEffect} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableRow, TableHeader } from "@/components/ui/table"
