@@ -1,6 +1,5 @@
 'use client';
 import { categoryColors, type Activity, type GroupedActivities } from '../../lib/types';
-import { useId } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useEffect, useMemo } from 'react';
 import {
@@ -229,8 +228,6 @@ export function WeeklySchedule({
   const handlePrint = () => {
     window.print();
   };
-
-  const id = useId();
 
   return (
     <div className="space-y-4 print-component">

@@ -208,7 +208,7 @@ export function ActivitiesTable({
   )
 }
 
-function useMemo(arg0: () => number, arg1: GroupedActivities[]) {
-  throw new Error('Function not implemented.');
-}
+// function useMemo(arg0: () => number, arg1: GroupedActivities[]) {
+//   throw new Error('Function not implemented.');
+// }
 
