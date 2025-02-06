@@ -61,6 +61,10 @@ export default function PlannerPage() {
     updateProductivityChart()
   }, [activities, weeklySchedule]) //Fixed dependency
 
+  useEffect(() => {
+    console.log("Activities state:", activities)
+  }, [activities])
+
   const loadStoredPlanners = async () => {
     const user = auth.currentUser
     if (!user) return
@@ -193,7 +197,7 @@ export default function PlannerPage() {
             </div>
             <WeeklySchedule
               activities={Object.entries(activities).flatMap(([category, acts]) =>
-                acts.map((act) => ({ ...act, category: category as keyof GroupedActivities })),
+                acts.map((act) => ({ ...act, id: act.name, category: category as keyof GroupedActivities })),
               )}
               onSave={savePlanner}
               onLoad={loadPlanner}
