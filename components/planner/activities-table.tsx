@@ -1,5 +1,5 @@
 "use client"
-
+import { categoryColors, type Activity, type GroupedActivities } from '../../lib/types';
 import { useState, useEffect} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,23 +14,23 @@ import {
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-interface Activity {
-  name: string
-}
+// interface Activity {
+//   name: string
+// }
 
-interface GroupedActivities {
-  "HIGH LIFE TIME (HLV)": Activity[]
-  "HIGH DOLLAR (HDV)": Activity[]
-  "LOW DOLLAR (LDV)": Activity[]
-  "ZERO VALUE (ZV)": Activity[]
-}
+// interface GroupedActivities {
+//   "HIGH LIFE TIME (HLV)": Activity[]
+//   "HIGH DOLLAR (HDV)": Activity[]
+//   "LOW DOLLAR (LDV)": Activity[]
+//   "ZERO VALUE (ZV)": Activity[]
+// }
 
-const categoryColors = {
-  "HIGH LIFE TIME (HLV)": "bg-green-600",
-  "HIGH DOLLAR (HDV)": "bg-blue-600",
-  "LOW DOLLAR (LDV)": "bg-sky-400",
-  "ZERO VALUE (ZV)": "bg-orange-500",
-}
+// const categoryColors = {
+//   "HIGH LIFE TIME (HLV)": "bg-green-600",
+//   "HIGH DOLLAR (HDV)": "bg-blue-600",
+//   "LOW DOLLAR (LDV)": "bg-sky-400",
+//   "ZERO VALUE (ZV)": "bg-orange-500",
+// }
 
 interface ActivitiesTableProps {
   activities: GroupedActivities
@@ -60,18 +60,43 @@ export function ActivitiesTable({
     setActivities(activities)
   }, [activities, setActivities])
 
-  const addActivity = () => {
-    if (!newActivity.trim()) return
+  // const addActivity = () => {
+  //   if (!newActivity.trim()) return
 
+  //   const updatedActivities = {
+  //     ...activities,
+  //     [selectedCategory]: [...activities[selectedCategory], { name: newActivity.trim() }],
+  //   }
+  //   setActivities(updatedActivities)
+  //   onAddActivity(updatedActivities)
+  //   setNewActivity("")
+  // }
+  const addActivity = () => {
+    if (!newActivity.trim()) return;
+    
+    console.log('Adding activity:', {
+      category: selectedCategory,
+      activity: newActivity.trim()
+    });
+  
     const updatedActivities = {
       ...activities,
-      [selectedCategory]: [...activities[selectedCategory], { name: newActivity.trim() }],
-    }
-    setActivities(updatedActivities)
-    onAddActivity(updatedActivities)
-    setNewActivity("")
-  }
+      [selectedCategory]: [
+        ...activities[selectedCategory],
+        { 
+          name: newActivity.trim(),
+          id: newActivity.trim()  // Add id here
+        }
+      ],
+    };
+  
+    console.log('Updated activities:', updatedActivities);
+    setActivities(updatedActivities);
+    onAddActivity(updatedActivities);
+    setNewActivity("");
+  };
 
+  
   const deleteActivity = (category: keyof GroupedActivities, index: number) => {
     const updatedActivities = {
       ...activities,

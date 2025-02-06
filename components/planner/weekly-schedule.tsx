@@ -1,4 +1,5 @@
 'use client';
+import { categoryColors, type Activity, type GroupedActivities } from '../../lib/types';
 import { useId } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useEffect, useMemo } from 'react';
@@ -30,12 +31,12 @@ import {
 import { Label } from '@/components/ui/label';
 import { PrinterIcon as Print } from 'lucide-react';
 
-const categoryColors = {
-  'HIGH LIFE TIME (HLV)': 'bg-green-600',
-  'HIGH DOLLAR (HDV)': 'bg-blue-600',
-  'LOW DOLLAR (LDV)': 'bg-sky-400',
-  'ZERO VALUE (ZV)': 'bg-orange-500',
-} as const;
+// const categoryColors = {
+//   'HIGH LIFE TIME (HLV)': 'bg-green-600',
+//   'HIGH DOLLAR (HDV)': 'bg-blue-600',
+//   'LOW DOLLAR (LDV)': 'bg-sky-400',
+//   'ZERO VALUE (ZV)': 'bg-orange-500',
+// } as const;
 
 interface ScheduleCell {
   activity: string;
@@ -48,11 +49,11 @@ type ScheduleData = {
   };
 };
 
-interface Activity {
-  id: string;
-  name: string;
-  category: keyof typeof categoryColors;
-}
+// interface Activity {
+//   id: string;
+//   name: string;
+//   category: keyof typeof categoryColors;
+// }
 
 interface WeeklyScheduleProps {
   activities: Activity[];
@@ -81,7 +82,37 @@ export function WeeklySchedule({
     null
   );
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
+  console.log('Received activities:', activities);
 
+  const groupedActivities = activities.reduce((acc, activity) => {
+    console.log('Processing activity for grouping:', activity);
+    if (!activity || !activity.category) {
+      console.warn('Invalid activity:', activity);
+      return acc;
+    }
+
+    const category = activity.category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    
+    if (activity.name) {
+      acc[category].push({
+        id: activity.id || activity.name,
+        name: activity.name,
+        category
+      });
+    }
+    
+    return acc;
+  }, {
+    'HIGH LIFE TIME (HLV)': [],
+    'HIGH DOLLAR (HDV)': [],
+    'LOW DOLLAR (LDV)': [],
+    'ZERO VALUE (ZV)': []
+  } as Record<keyof typeof categoryColors, Activity[]>);
+
+  console.log('Grouped activities:', groupedActivities);
   const days = useMemo(() => {
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     return includeWeekends ? [...weekdays, 'Saturday', 'Sunday'] : weekdays;
@@ -162,22 +193,22 @@ export function WeeklySchedule({
     setSelectedDuration(null);
   };
 //----------------------------------------------Changed Code --------------------------------
-  const groupedActivities = activities.reduce((acc, activity) => {
-    const category = activity.category;
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    // Only push if the activity is valid
-    if (activity && activity.name) {
-      acc[category].push(activity);
-    }
-    return acc;
-  }, {
-    'HIGH LIFE TIME (HLV)': [],
-    'HIGH DOLLAR (HDV)': [],
-    'LOW DOLLAR (LDV)': [],
-    'ZERO VALUE (ZV)': []
-  } as Record<keyof typeof categoryColors, Activity[]>);
+  // const groupedActivities = activities.reduce((acc, activity) => {
+  //   const category = activity.category;
+  //   if (!acc[category]) {
+  //     acc[category] = [];
+  //   }
+  //   // Only push if the activity is valid
+  //   if (activity && activity.name) {
+  //     acc[category].push(activity);
+  //   }
+  //   return acc;
+  // }, {
+  //   'HIGH LIFE TIME (HLV)': [],
+  //   'HIGH DOLLAR (HDV)': [],
+  //   'LOW DOLLAR (LDV)': [],
+  //   'ZERO VALUE (ZV)': []
+  // } as Record<keyof typeof categoryColors, Activity[]>);
 //----------------------------------------------Changed Code End--------------------------------
   const handlePrint = () => {
     window.print();

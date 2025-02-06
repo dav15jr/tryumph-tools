@@ -1,5 +1,5 @@
 "use client"
-
+import { categoryColors, type Activity, type GroupedActivities } from '../../lib/types';
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ProtectedRoute from "@/components/auth/protected-route"
@@ -10,16 +10,16 @@ import { PlannerSummary } from "@/components/planner/planner-summary"
 import { collection, getDocs, doc, setDoc, getDoc } from "firebase/firestore"
 import { db, auth } from "@/lib/firebase"
 
-interface Activity {
-  name: string
-}
+// interface Activity {
+//   name: string
+// }
 
-interface GroupedActivities {
-  "HIGH LIFE TIME (HLV)": Activity[]
-  "HIGH DOLLAR (HDV)": Activity[]
-  "LOW DOLLAR (LDV)": Activity[]
-  "ZERO VALUE (ZV)": Activity[]
-}
+// interface GroupedActivities {
+//   "HIGH LIFE TIME (HLV)": Activity[]
+//   "HIGH DOLLAR (HDV)": Activity[]
+//   "LOW DOLLAR (LDV)": Activity[]
+//   "ZERO VALUE (ZV)": Activity[]
+// }
 
 interface ScheduleData {
   [time: string]: {
@@ -158,7 +158,20 @@ export default function PlannerPage() {
   const handleDeleteActivity = (updatedActivities: GroupedActivities) => {
     setActivities(updatedActivities)
   }
-
+  const mappedActivities = Object.entries(activities).flatMap(([category, acts]) => {
+    console.log('Category:', category);
+    console.log('Acts:', acts);
+    return acts.map((act) => {
+      console.log('Processing activity:', act);
+      return {
+        ...act,
+        id: act.name,
+        category: category as keyof typeof categoryColors
+      };
+    });
+  });
+  
+  console.log('Mapped activities:', mappedActivities);
   return (
     <ProtectedRoute>
       <div className="container mx-auto px-4 py-6 md:py-8">
@@ -196,9 +209,9 @@ export default function PlannerPage() {
               <h2 className="text-2xl md:text-4xl font-bold">{plannerTitle}</h2>
             </div>
             <WeeklySchedule
-              activities={Object.entries(activities).flatMap(([category, acts]) =>
-                acts.map((act) => ({ ...act, id: act.name, category: category as keyof GroupedActivities })),
-              )}
+    activities={Object.entries(activities).flatMap(([category, acts]) =>
+      acts.map((act) => ({ ...act, id: act.name, category: category as keyof typeof categoryColors })),
+    )}
               onSave={savePlanner}
               onLoad={loadPlanner}
               savedSchedules={storedPlanners}
