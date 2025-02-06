@@ -161,15 +161,24 @@ export function WeeklySchedule({
     setSelectedActivity(null);
     setSelectedDuration(null);
   };
-
+//----------------------------------------------Changed Code --------------------------------
   const groupedActivities = activities.reduce((acc, activity) => {
-    if (!acc[activity.category]) {
-      acc[activity.category] = [];
+    const category = activity.category;
+    if (!acc[category]) {
+      acc[category] = [];
     }
-    acc[activity.category].push(activity);
+    // Only push if the activity is valid
+    if (activity && activity.name) {
+      acc[category].push(activity);
+    }
     return acc;
-  }, {} as Record<string, Activity[]>);
-
+  }, {
+    'HIGH LIFE TIME (HLV)': [],
+    'HIGH DOLLAR (HDV)': [],
+    'LOW DOLLAR (LDV)': [],
+    'ZERO VALUE (ZV)': []
+  } as Record<keyof typeof categoryColors, Activity[]>);
+//----------------------------------------------Changed Code End--------------------------------
   const handlePrint = () => {
     window.print();
   };
