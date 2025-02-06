@@ -72,7 +72,7 @@ export function WeeklySchedule({
     time: string;
     day: string;
   } | null>(null);
-  const [selectedSchedule, setSelectedSchedule] = useState<string | null>(null);
+  const [selectedSchedule, setSelectedSchedule] = useState<string | undefined>(undefined);
   const [includeWeekends, setIncludeWeekends] = useState(false);
   const [startTime, setStartTime] = useState('08:00');
   const [endTime, setEndTime] = useState('22:00');
