@@ -59,7 +59,7 @@ export default function PlannerPage() {
 
   useEffect(() => {
     updateProductivityChart()
-  }, [activities, weeklySchedule]) //Fixed dependency
+  }, [weeklySchedule]) //update productivity chart when weekly schedule changes
 
   useEffect(() => {
     console.log("Activities state:", activities)
@@ -162,7 +162,7 @@ export default function PlannerPage() {
   return (
     <ProtectedRoute>
       <div className="container mx-auto px-4 py-6 md:py-8">
-        <Card className="mb-8">
+        <Card className="mb-8 no-print">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">Productivity Planner</CardTitle>
           </CardHeader>
@@ -173,7 +173,7 @@ export default function PlannerPage() {
           </CardContent>
         </Card>
 
-        <div className="grid lg:grid-cols-4 gap-4 md:gap-6 mb-6">
+        <div className="grid lg:grid-cols-4 gap-4 md:gap-6 mb-6 no-print">
           <div className="lg:col-span-3">
             <Card>
               <CardContent className="p-4">
@@ -189,7 +189,7 @@ export default function PlannerPage() {
             </Card>
           </div>
         </div>
-
+        <div className="print-container">
         <div className="grid lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3">
             <div className="mb-4 text-center">
@@ -207,6 +207,7 @@ export default function PlannerPage() {
           <div className="space-y-6">
             <ProductivityChart data={productivityData} />
             <PlannerSummary data={productivityData} activities={activities} />
+          </div>
           </div>
         </div>
       </div>

@@ -1,10 +1,17 @@
-"use client"
-import { useId } from "react"
-import { v4 as uuidv4 } from "uuid"
-import { useState, useEffect, useMemo } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+'use client';
+import { useId } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { useState, useEffect, useMemo } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -13,149 +20,170 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu, DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import { Label } from "@/components/ui/label"
-import { PrinterIcon as Print } from "lucide-react"
+} from '@/components/ui/select';
+import {
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
+import { Label } from '@/components/ui/label';
+import { PrinterIcon as Print } from 'lucide-react';
 
 const categoryColors = {
-  "HIGH LIFE TIME (HLV)": "bg-green-600",
-  "HIGH DOLLAR (HDV)": "bg-blue-600",
-  "LOW DOLLAR (LDV)": "bg-sky-400",
-  "ZERO VALUE (ZV)": "bg-orange-500",
-} as const
+  'HIGH LIFE TIME (HLV)': 'bg-green-600',
+  'HIGH DOLLAR (HDV)': 'bg-blue-600',
+  'LOW DOLLAR (LDV)': 'bg-sky-400',
+  'ZERO VALUE (ZV)': 'bg-orange-500',
+} as const;
 
 interface ScheduleCell {
-  activity: string
-  category: keyof typeof categoryColors
+  activity: string;
+  category: keyof typeof categoryColors;
 }
 
 type ScheduleData = {
   [time: string]: {
-    [day: string]: ScheduleCell | null
-  }
-}
+    [day: string]: ScheduleCell | null;
+  };
+};
 
 interface Activity {
-  id: string
-  name: string
-  category: keyof typeof categoryColors
+  id: string;
+  name: string;
+  category: keyof typeof categoryColors;
 }
 
 interface WeeklyScheduleProps {
-  activities: Activity[]
-  onSave: (schedule: ScheduleData) => void
-  onLoad: (selectedSchedule?: string) => Promise<ScheduleData | undefined>
-  savedSchedules: string[]
+  activities: Activity[];
+  onSave: (schedule: ScheduleData) => void;
+  onLoad: (selectedSchedule?: string) => Promise<ScheduleData | undefined>;
+  savedSchedules: string[];
 }
 
-export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: WeeklyScheduleProps) {
-  const [schedule, setSchedule] = useState<ScheduleData>({})
+export function WeeklySchedule({
+  activities,
+  onSave,
+  onLoad,
+  savedSchedules,
+}: WeeklyScheduleProps) {
+  const [schedule, setSchedule] = useState<ScheduleData>({});
   const [selectedCell, setSelectedCell] = useState<{
-    time: string
-    day: string
-  } | null>(null)
-  const [selectedSchedule, setSelectedSchedule] = useState<string | null>(null)
-  const [includeWeekends, setIncludeWeekends] = useState(false)
-  const [startTime, setStartTime] = useState("08:00")
-  const [endTime, setEndTime] = useState("22:00")
-  const [blockSize, setBlockSize] = useState("60")
-  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
-  const [selectedDuration, setSelectedDuration] = useState<number | null>(null)
+    time: string;
+    day: string;
+  } | null>(null);
+  const [selectedSchedule, setSelectedSchedule] = useState<string | null>(null);
+  const [includeWeekends, setIncludeWeekends] = useState(false);
+  const [startTime, setStartTime] = useState('08:00');
+  const [endTime, setEndTime] = useState('22:00');
+  const [blockSize, setBlockSize] = useState('60');
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
+    null
+  );
+  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
 
   const days = useMemo(() => {
-    const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    return includeWeekends ? [...weekdays, "Saturday", "Sunday"] : weekdays
-  }, [includeWeekends])
+    const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    return includeWeekends ? [...weekdays, 'Saturday', 'Sunday'] : weekdays;
+  }, [includeWeekends]);
 
   const timeSlots = useMemo(() => {
-    const slots = []
-    const start = Number.parseInt(startTime.split(":")[0])
-    const end = Number.parseInt(endTime.split(":")[0])
-    const interval = Number.parseInt(blockSize)
+    const slots = [];
+    const start = Number.parseInt(startTime.split(':')[0]);
+    const end = Number.parseInt(endTime.split(':')[0]);
+    const interval = Number.parseInt(blockSize);
 
     for (let hour = start; hour < end; hour++) {
       for (let minute = 0; minute < 60; minute += interval) {
-        slots.push(`${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`)
+        slots.push(
+          `${hour.toString().padStart(2, '0')}:${minute
+            .toString()
+            .padStart(2, '0')}`
+        );
       }
     }
-    return slots
-  }, [startTime, endTime, blockSize])
+    return slots;
+  }, [startTime, endTime, blockSize]);
 
   useEffect(() => {
-    loadSchedule()
-  }, [])
+    loadSchedule();
+  }, []);
 
   const loadSchedule = async () => {
-    const loadedSchedule = await onLoad(selectedSchedule)
+    const loadedSchedule = await onLoad(selectedSchedule);
     if (loadedSchedule) {
-      setSchedule(loadedSchedule)
+      setSchedule(loadedSchedule);
     }
-  }
+  };
 
   const handleCellClick = (time: string, day: string) => {
-    setSelectedCell({ time, day })
-    setSelectedActivity(null)
-    setSelectedDuration(null)
-  }
+    setSelectedCell({ time, day });
+    setSelectedActivity(null);
+    setSelectedDuration(null);
+  };
 
   const handleActivitySelect = (value: string) => {
-    const [category, name] = value.split(":")
-    const activity = activities.find((a) => a.name === name && a.category === category)
+    const [category, name] = value.split(':');
+    const activity = activities.find(
+      (a) => a.name === name && a.category === category
+    );
     if (activity) {
-      setSelectedActivity(activity)
+      setSelectedActivity(activity);
     }
-  }
+  };
 
   const handleDurationSelect = (duration: string) => {
-    if (!selectedCell || !selectedActivity) return
+    if (!selectedCell || !selectedActivity) return;
 
-    const durationMinutes = Number.parseInt(duration)
-    const startIndex = timeSlots.indexOf(selectedCell.time)
-    const endIndex = Math.min(startIndex + durationMinutes / Number.parseInt(blockSize), timeSlots.length)
+    const durationMinutes = Number.parseInt(duration);
+    const startIndex = timeSlots.indexOf(selectedCell.time);
+    const endIndex = Math.min(
+      startIndex + durationMinutes / Number.parseInt(blockSize),
+      timeSlots.length
+    );
 
     setSchedule((prevSchedule) => {
-      const newSchedule = { ...prevSchedule }
+      const newSchedule = { ...prevSchedule };
       for (let i = startIndex; i < endIndex; i++) {
-        const time = timeSlots[i]
+        const time = timeSlots[i];
         if (!newSchedule[time]) {
-          newSchedule[time] = {}
+          newSchedule[time] = {};
         }
         newSchedule[time][selectedCell.day] = {
           activity: selectedActivity.name,
           category: selectedActivity.category,
-        }
+        };
       }
-      return newSchedule
-    })
+      return newSchedule;
+    });
 
-    setSelectedCell(null)
-    setSelectedActivity(null)
-    setSelectedDuration(null)
-  }
+    setSelectedCell(null);
+    setSelectedActivity(null);
+    setSelectedDuration(null);
+  };
 
-  const groupedActivities = activities.reduce(
-    (acc, activity) => {
-      if (!acc[activity.category]) {
-        acc[activity.category] = []
-      }
-      acc[activity.category].push(activity)
-      return acc
-    },
-    {} as Record<string, Activity[]>,
-  )
+  const groupedActivities = activities.reduce((acc, activity) => {
+    if (!acc[activity.category]) {
+      acc[activity.category] = [];
+    }
+    acc[activity.category].push(activity);
+    return acc;
+  }, {} as Record<string, Activity[]>);
 
   const handlePrint = () => {
-    window.print()
-  }
+    window.print();
+  };
 
-  const id = useId()
+  const id = useId();
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+    <div className="space-y-4 print-component">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 no-print">
         <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2">
-          <Select onValueChange={setSelectedSchedule} value={selectedSchedule || undefined}>
+          <Select
+            onValueChange={setSelectedSchedule}
+            value={selectedSchedule || undefined}
+          >
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select schedule" />
             </SelectTrigger>
@@ -178,12 +206,14 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
           </Button>
         </div>
       </div>
-      <div className="flex flex-wrap justify-between items-center gap-4">
+      <div className="flex flex-wrap justify-between items-center gap-4 no-print">
         <div className="flex items-center space-x-2">
           <Checkbox
             id="include-weekends"
             checked={includeWeekends}
-            onCheckedChange={(checked) => setIncludeWeekends(checked as boolean)}
+            onCheckedChange={(checked) =>
+              setIncludeWeekends(checked as boolean)
+            }
           />
           <Label
             htmlFor="include-weekends"
@@ -199,8 +229,11 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
             </SelectTrigger>
             <SelectContent>
               {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                <SelectItem key={hour} value={`${hour.toString().padStart(2, "0")}:00`}>
-                  {`${hour.toString().padStart(2, "0")}:00`}
+                <SelectItem
+                  key={hour}
+                  value={`${hour.toString().padStart(2, '0')}:00`}
+                >
+                  {`${hour.toString().padStart(2, '0')}:00`}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -212,8 +245,11 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
             </SelectTrigger>
             <SelectContent>
               {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                <SelectItem key={hour} value={`${hour.toString().padStart(2, "0")}:00`}>
-                  {`${hour.toString().padStart(2, "0")}:00`}
+                <SelectItem
+                  key={hour}
+                  value={`${hour.toString().padStart(2, '0')}:00`}
+                >
+                  {`${hour.toString().padStart(2, '0')}:00`}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -232,7 +268,7 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
           </Select>
         </div>
       </div>
-      <div className="flex flex-wrap justify-end space-x-4">
+      <div className="flex flex-wrap justify-end space-x-4 no-print">
         {Object.entries(categoryColors).map(([category, color]) => (
           <div key={category} className="flex items-center">
             <div className={`w-4 h-4 ${color} mr-2`}></div>
@@ -248,7 +284,9 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
                 <TableRow>
                   <TableHead className="w-20 text-center">Time</TableHead>
                   {days.map((day) => (
-                    <TableHead className="text-center"key={day}>{day}</TableHead>
+                    <TableHead className="text-center" key={day}>
+                      {day}
+                    </TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
@@ -262,12 +300,16 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
                         className="p-0 cursor-pointer hover:bg-gray-200 relative"
                         onClick={() => handleCellClick(time, day)}
                       >
-                        {selectedCell?.time === time && selectedCell?.day === day ? (
+                        {selectedCell?.time === time &&
+                        selectedCell?.day === day ? (
                           <div className="absolute inset-0 z-10">
                             <DropdownMenu>
                               <DropdownMenuTrigger className="w-full h-full bg-gray-300">
-                                <Select >
-                                  <SelectValue className="w-48 red-400" placeholder="Select activity and duration" />
+                                <Select>
+                                  <SelectValue
+                                    className="w-48 red-400"
+                                    placeholder="Select activity and duration"
+                                  />
                                 </Select>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent className="w-48 bg-gray-200">
@@ -277,19 +319,27 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
                                       <SelectValue placeholder="Select activity" />
                                     </SelectTrigger>
                                     <SelectContent key={`${uuidv4()}`}>
-                                      {Object.entries(groupedActivities).map(([category, categoryActivities]) => (
-                                        <SelectGroup key={`${category}`}>
-                                          <SelectLabel key={`${category}`}>{category}</SelectLabel>
-                                          {categoryActivities.map((activity) => (
-                                            <SelectItem
-                                              key={`${activity.id}:${uuidv4()}`}
-                                              value={`${activity.category}:${activity.name}`}
-                                            >
-                                              {activity.name}
-                                            </SelectItem>
-                                          ))}
-                                        </SelectGroup>
-                                      ))}
+                                      {Object.entries(groupedActivities).map(
+                                        ([category, categoryActivities]) => (
+                                          <SelectGroup key={`${category}`}>
+                                            <SelectLabel key={`${category}`}>
+                                              {category}
+                                            </SelectLabel>
+                                            {categoryActivities.map(
+                                              (activity) => (
+                                                <SelectItem
+                                                  key={`${
+                                                    activity.id
+                                                  }:${uuidv4()}`}
+                                                  value={`${activity.category}:${activity.name}`}
+                                                >
+                                                  {activity.name}
+                                                </SelectItem>
+                                              )
+                                            )}
+                                          </SelectGroup>
+                                        )
+                                      )}
                                     </SelectContent>
                                   </Select>
                                 </DropdownMenuItem>
@@ -299,11 +349,16 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
                                       <SelectValue placeholder="Select duration" />
                                     </SelectTrigger>
                                     <SelectContent className="w-48">
-                                      {[15, 30, 60, 90, 120, 180, 240].map((duration) => (
-                                        <SelectItem key={duration} value={duration.toString()}>
-                                          {duration} minutes
-                                        </SelectItem>
-                                      ))}
+                                      {[15, 30, 60, 90, 120, 180, 240].map(
+                                        (duration) => (
+                                          <SelectItem
+                                            key={duration}
+                                            value={duration.toString()}
+                                          >
+                                            {duration} minutes
+                                          </SelectItem>
+                                        )
+                                      )}
                                     </SelectContent>
                                   </Select>
                                 </DropdownMenuItem>
@@ -313,10 +368,13 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
                         ) : (
                           <div
                             className={`${
-                              schedule[time]?.[day] ? categoryColors[schedule[time][day].category] : ""
+                              schedule[time]?.[day]
+                                ? categoryColors[schedule[time][day].category]
+                                : ''
                             } text-white p-2 text-sm min-h-[40px] transition-colors`}
                           >
-                            {schedule[time]?.[day] && `${schedule[time][day].activity}`}
+                            {schedule[time]?.[day] &&
+                              `${schedule[time][day].activity}`}
                           </div>
                         )}
                       </TableCell>
@@ -329,6 +387,5 @@ export function WeeklySchedule({ activities, onSave, onLoad, savedSchedules }: W
         </div>
       </div>
     </div>
-  )
+  );
 }
-
