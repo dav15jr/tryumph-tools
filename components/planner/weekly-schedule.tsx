@@ -84,33 +84,41 @@ export function WeeklySchedule({
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   console.log('Received activities:', activities);
 
-  const groupedActivities = activities.reduce((acc, activity) => {
-    console.log('Processing activity for grouping:', activity);
-    if (!activity || !activity.category) {
-      console.warn('Invalid activity:', activity);
-      return acc;
-    }
+  // const groupedActivities = activities.reduce((acc, activity) => {
+  //   console.log('Processing activity for grouping:', activity);
+  //   if (!activity || !activity.category) {
+  //     console.warn('Invalid activity:', activity);
+  //     return acc;
+  //   }
 
-    const category = activity.category;
-    if (!acc[category]) {
-      acc[category] = [];
-    }
+  //   const category = activity.category;
+  //   if (!acc[category]) {
+  //     acc[category] = [];
+  //   }
     
-    if (activity.name) {
-      acc[category].push({
-        id: activity.id || activity.name,
-        name: activity.name,
-        category
-      });
-    }
+  //   if (activity.name) {
+  //     acc[category].push({
+  //       id: activity.id || activity.name,
+  //       name: activity.name,
+  //       category
+  //     });
+  //   }
     
-    return acc;
-  }, {
-    'HIGH LIFE TIME (HLV)': [],
-    'HIGH DOLLAR (HDV)': [],
-    'LOW DOLLAR (LDV)': [],
-    'ZERO VALUE (ZV)': []
-  } as Record<keyof typeof categoryColors, Activity[]>);
+  //   return acc;
+  // }, {
+  //   'HIGH LIFE TIME (HLV)': [],
+  //   'HIGH DOLLAR (HDV)': [],
+  //   'LOW DOLLAR (LDV)': [],
+  //   'ZERO VALUE (ZV)': []
+  // } as Record<keyof typeof categoryColors, Activity[]>);
+
+  const groupedActivities = useMemo(() => {
+    return Object.entries(categoryColors).reduce((acc, [category]) => {
+      acc[category] = activities.filter(act => act.category === category);
+      return acc;
+    }, {} as Record<string, Activity[]>);
+  }, [activities]);
+
 
   console.log('Grouped activities:', groupedActivities);
   const days = useMemo(() => {
@@ -348,7 +356,7 @@ export function WeeklySchedule({
                                 <Select>
                                   <SelectValue
                                     className="w-48 red-400"
-                                    placeholder="Select activity and duration"
+                                    placeholder="Select activity"
                                   />
                                 </Select>
                               </DropdownMenuTrigger>
@@ -359,14 +367,12 @@ export function WeeklySchedule({
                                       <SelectValue placeholder="Select activity" />
                                     </SelectTrigger>
                                     <SelectContent key={`${uuidv4()}`}>
-                                      {Object.entries(groupedActivities).map(
-                                        ([category, categoryActivities]) => (
+                                    {Object.entries(groupedActivities).map(([category, acts]) => (
                                           <SelectGroup key={`${category}`}>
                                             <SelectLabel key={`${category}`}>
                                               {category}
                                             </SelectLabel>
-                                            {categoryActivities.map(
-                                              (activity) => (
+                                            {acts.map((activity) => (
                                                 <SelectItem
                                                   key={`${
                                                     activity.id
