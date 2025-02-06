@@ -1,9 +1,12 @@
+
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 let userConfig = undefined
 try {
   userConfig = await import('./v0-user-next.config')
 } catch (e) {
   // ignore error
 }
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -20,6 +23,44 @@ const nextConfig = {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
+  },
+  reactStrictMode: true,
+  webpack: (config, { isServer }) => {
+    // Increase the memory limit
+    config.performance = {
+      ...config.performance,
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000,
+    };
+    
+      if (!isServer) {
+        config.plugins.push(new BundleAnalyzerPlugin());
+      }
+      
+    
+    // Optimize the build process
+    config.optimization = {
+      ...config.optimization,
+      minimize: true,
+      splitChunks: {
+        chunks: 'all',
+        maxInitialRequests: Infinity,
+        minSize: 0,
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name(module) {
+              const match = module.context ? module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/) : null;
+              const packageName = match ? match[1] : 'unknown';
+              
+              return `npm.${packageName.replace('@', '')}`;
+            },
+          },
+        },
+      },
+    };
+
+    return config;
   },
 }
 
