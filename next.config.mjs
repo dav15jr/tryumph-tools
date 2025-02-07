@@ -6,7 +6,6 @@ try {
 } catch (e) {
   // ignore error
 }
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -47,15 +46,20 @@ const nextConfig = {
         maxInitialRequests: Infinity,
         minSize: 0,
         cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name(module) {
-              const match = module.context ? module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/) : null;
-              const packageName = match ? match[1] : 'unknown';
+          // vendor: {
+          //   test: /[\\/]node_modules[\\/]/,
+          //   name(module) {
+          //     const match = module.context ? module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/) : null;
+          //     const packageName = match ? match[1] : 'unknown';
               
-              return `npm.${packageName.replace('@', '')}`;
-            },
-          },
+          //     return `npm.${packageName.replace('@', '')}`;
+          //   },
+          // },
+          vendor: {
+            name: 'vendor',
+            test: /[\\/]node_modules[\\/]/,
+            chunks: 'all',
+          }
         },
       },
     };

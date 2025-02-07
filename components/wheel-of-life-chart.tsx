@@ -7,9 +7,14 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { PolarArea } from 'react-chartjs-2';
+// import { PolarArea } from 'react-chartjs-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import dynamic from 'next/dynamic';
 
+const PolarArea = dynamic(() => import('react-chartjs-2').then(mod => mod.Chart), {
+  loading: () => <p>Loading chart...</p>,
+  ssr: false // If the chart doesn't need SSR
+});
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
 interface WheelOfLifeChartProps {
