@@ -43,8 +43,8 @@ const nextConfig = {
       minimize: true,
       splitChunks: {
         chunks: 'all',
-        maxInitialRequests: Infinity,
-        minSize: 0,
+        maxInitialRequests: 25,
+        minSize: 20000,
         cacheGroups: {
           // vendor: {
           //   test: /[\\/]node_modules[\\/]/,
@@ -66,6 +66,8 @@ const nextConfig = {
 
     return config;
   },
+   // Reduce build output size
+   output: 'standalone',
 }
 
 mergeConfig(nextConfig, userConfig)
