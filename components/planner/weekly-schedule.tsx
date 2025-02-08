@@ -30,13 +30,6 @@ import {
 import { Label } from '@/components/ui/label';
 import { PrinterIcon as Print } from 'lucide-react';
 
-// const categoryColors = {
-//   'HIGH LIFE TIME (HLV)': 'bg-green-600',
-//   'HIGH DOLLAR (HDV)': 'bg-blue-600',
-//   'LOW DOLLAR (LDV)': 'bg-sky-400',
-//   'ZERO VALUE (ZV)': 'bg-orange-500',
-// } as const;
-
 interface ScheduleCell {
   activity: string;
   category: keyof typeof categoryColors;
@@ -47,12 +40,6 @@ type ScheduleData = {
     [day: string]: ScheduleCell | null;
   };
 };
-
-// interface Activity {
-//   id: string;
-//   name: string;
-//   category: keyof typeof categoryColors;
-// }
 
 interface WeeklyScheduleProps {
   activities: Activity[];
@@ -83,33 +70,6 @@ export function WeeklySchedule({
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   console.log('Received activities:', activities);
 
-  // const groupedActivities = activities.reduce((acc, activity) => {
-  //   console.log('Processing activity for grouping:', activity);
-  //   if (!activity || !activity.category) {
-  //     console.warn('Invalid activity:', activity);
-  //     return acc;
-  //   }
-
-  //   const category = activity.category;
-  //   if (!acc[category]) {
-  //     acc[category] = [];
-  //   }
-    
-  //   if (activity.name) {
-  //     acc[category].push({
-  //       id: activity.id || activity.name,
-  //       name: activity.name,
-  //       category
-  //     });
-  //   }
-    
-  //   return acc;
-  // }, {
-  //   'HIGH LIFE TIME (HLV)': [],
-  //   'HIGH DOLLAR (HDV)': [],
-  //   'LOW DOLLAR (LDV)': [],
-  //   'ZERO VALUE (ZV)': []
-  // } as Record<keyof typeof categoryColors, Activity[]>);
 
   const groupedActivities = (activities: Activity[]) => {
     const grouped = Object.keys(categoryColors).reduce((acc, category) => {
@@ -361,7 +321,7 @@ export function WeeklySchedule({
                                 <Select>
                                   <SelectValue
                                     className="w-48 red-400"
-                                    placeholder="Select activity"
+                                    placeholder="Select activity and duration"
                                   />
                                 </Select>
                               </DropdownMenuTrigger>
